@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Queeniu - Valentine 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        /* --- RESET & CHUNG --- */
+        body { margin: 0; padding: 0; overflow-x: hidden; background-color: #000; }
+
+        /* --- MÀN HÌNH CHỜ (Để kích hoạt nhạc) --- */
+        #start-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; display: flex; justify-content: center; align-items: center; z-index: 9999;
+            flex-direction: column; color: #fff; font-family: 'Quicksand', sans-serif;
+        }
+        #start-btn {
+            padding: 15px 30px; font-size: 1.5rem; background: #ff4757; color: white;
+            border: none; border-radius: 50px; cursor: pointer; transition: transform 0.3s;
+            box-shadow: 0 0 20px rgba(255, 71, 87, 0.5);
+        }
+        #start-btn:hover { transform: scale(1.1); }
+
+        /* --- PHẦN 1: TERMINAL HACKER (Phim tài liệu Style) --- */
+        #terminal {
+            display: none; /* Ẩn ban đầu */
+            background-color: #000;
+            color: #00ff41; /* Màu xanh Matrix chuẩn */
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            font-family: 'Share Tech Mono', monospace; /* Font Hacker */
+            font-size: 1.2rem;
+            position: relative;
+            overflow-y: auto;
+            text-shadow: 0 0 5px #00ff41;
+        }
+        /* Hiệu ứng màn hình CRT cũ */
+        #terminal::before {
+            content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none;
+        }
+        .cursor { display: inline-block; width: 10px; height: 20px; background: #00ff41; animation: blink 0.8s infinite; vertical-align: bottom;}
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* --- PHẦN 2: LOVE CONTENT --- */
+        #love-content {
+            display: none;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            min-height: 100vh; padding: 20px; position: relative;
+            font-family: 'Quicksand', sans-serif; color: #333;
+            overflow: hidden;
+        }
+        /* Hiệu ứng tim bay nền */
+        .bg-heart {
+            position: absolute; color: rgba(255, 182, 193, 0.4); font-size: 2rem;
+            animation: floatUp 10s linear infinite; z-index: 0;
+        }
+        @keyframes floatUp { 
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0; } 
+            50% { opacity: 1; } 
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; } 
+        }
+
+        h1 { font-family: 'Dancing Script', cursive; color: #ff4757; font-size: 3rem; text-align: center; margin-bottom: 30px; z-index: 2; position: relative;}
+
+        .memory-card {
+            background: white; margin: 30px auto; padding: 20px; border-radius: 20px;
+            max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transform: translateY(50px); opacity: 0; transition: all 0.8s ease;
+            position: relative; z-index: 2; border: 1px solid #ffecec;
+        }
+        .memory-card.show { opacity: 1; transform: translateY(0); }
+        .memory-card img { width: 100%; border-radius: 15px; margin-top: 15px; transition: transform 0.3s;}
+        .memory-card img:hover { transform: scale(1.02); }
+        .date { color: #ff6b81; font-weight: bold; font-size: 0.9rem; letter-spacing: 1px; }
+
+        /* Nút bí mật */
+        .secret-box {
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            color: white; padding: 20px; border-radius: 15px; text-align: center;
+            cursor: pointer; margin: 30px auto; max-width: 400px;
+            animation: pulse 2s infinite; position: relative; z-index: 2;
+        }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        
+        /* Modal Popup */
+        #angel-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: white; padding: 30px; border-radius: 20px; max-width: 80%; width: 400px;
+            text-align: center; position: relative; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .lyric-quote { font-family: 'Dancing Script', cursive; font-size: 1.8rem; color: #d63031; margin-bottom: 15px; }
+        .explanation { font-size: 1.1rem; line-height: 1.6; color: #555; }
+        .close-btn { 
+            margin-top: 20px; padding: 10px 25px; background: #333; color: white; border: none; border-radius: 20px; cursor: pointer; 
+        }
+
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="Ordinary.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="start-screen">
+        <p>Đeo tai nghe vào nhaaa...</p>
+        <button id="start-btn" onclick="startJourney()">Bắt đầu hành trình</button>
+    </div>
+
+    <div id="terminal">
+        <div id="console-output"></div>
+        <div class="cursor">_</div>
+    </div>
+
+    <div id="love-content">
+        <div class="bg-heart" style="left: 10%; animation-duration: 8s;">❤️</div>
+        <div class="bg-heart" style="left: 30%; animation-duration: 12s;">💖</div>
+        <div class="bg-heart" style="left: 70%; animation-duration: 9s;">💕</div>
+        <div class="bg-heart" style="left: 90%; animation-duration: 11s;">❤️</div>
+
+        <h1>Happy Valentine's Day! ❤️</h1>
+        <p style="text-align: center;">Chào mừng Queeniu đến với thế giới của anh</p>
+        
+        <div class="memory-card">
+            <div class="date">14/02/2025</div>
+            <h3>Thất bại ruii... nhưng hơn cả đáng giá<3</h3>
+            <p>Ngày này năm ngoái, anh nhận được một lời từ chối. Lúc đó buồn thật đấy, nhưng nhờ nó mà mình mới có thời gian để hiểu nhau hơn. Cảm ơn em nhìu vì đã chưa đồng ý ngay lúc đó để chúng ta có ngày hôm nay nì.</p>
+            <img src="lovequeen1.jpg" alt="Ky niem cu"> 
+        </div>
+
+        <div class="memory-card">
+            <div class="date">14/02/2026</div>
+            <h3>Kết nối thành công nhưng...</h3>
+            <p>Tết này tuy ở xa, mỗi người một quê, nhưng khoảng cách địa lý chỉ là một biến số. Tình cảm của anh dành cho em mới là hằng số không đổi hihiii.</p>
+            <img src="lovequeen2.jpg" alt="Hien tai">
+        </div>
+
+        <div class="secret-box" onclick="showSecret()">
+            <h3>🎁 Một bí mật nhỏ dành riêng cho Queen cụa anh</h3>
+            <p>(Nhấn vào để mở)</p>
+        </div>
+
+        <div style="height: 50px;"></div> </div>
+
+    <div id="angel-modal">
+        <div class="modal-content">
+            <div class="lyric-quote">"The angels up in the clouds are jealous, knowing we found..."</div>
+            <div class="explanation">
+                <p>Em có nhớ câu hát yêu thích nì trong bài "Ordinary" của chúng mình hongg?</p>
+                <p>Nó có nghĩa là: <b>Chúng mình đẹp đôi tới mức các thiên thần trên kia cũng phải ghen tị.</b></p>
+                <p>Chính vì họ ghen tị, nên họ mới tạo ra khoảng cách, tạo ra một đống thử thách để xem chúng mình có buông tay không. Nhưng dù có khó khăn thế nào, anh tin là chúng mình đều sẽ vượt qua hếc. Chúng mình đồng hành tới được lúc này cũng là quá đỉnh rui nè, đúng khômm?</p> 
+                <p>Hãy cùng nhau cố gắng thậc nhìu nhìu nữa để có nhiều kỉ niệm đẹp hơnn emiu nhaa</p>
+            </div>
+            <button class="close-btn" onclick="closeSecret()">Iu anh lắmm ❤️</button>
+        </div>
+    </div>
+
+    <script>
+        // --- LOGIC XỬ LÝ ---
+        const startScreen = document.getElementById('start-screen');
+        const terminal = document.getElementById('terminal');
+        const loveContent = document.getElementById('love-content');
+        const audio = document.getElementById('bg-music');
+        const consoleOutput = document.getElementById('console-output');
+
+        // Bắt đầu
+        function startJourney() {
+            startScreen.style.display = 'none'; // Ẩn nút start
+            terminal.style.display = 'block';   // Hiện terminal
+            audio.play().catch(e => console.log("Audio autoplay block by browser")); // Chơi nhạc
+            runHackerEffect(); // Chạy code
+        }
+
+        // Hacker Effect - Gõ từng chữ
+        const lines = [
+            "Khởi tạo hệ thống...",
+            "Kết nối tới server: LOVEQUEEN_2025...2026...",
+            "Truy cập bộ nhớ tình iuu cute nhứt...",
+            "Đang tìm kiếm mục tiêu:",
+            "Cô gái xinh nhất hệ mặt trời,", 
+            "Nữ hoàng/ sứ giả cute...",
+            "Đã tìm thấy: vại tương lơ...",
+            "Quét thấy mục tiêu: Khoảng cách = 150km...",
+            "Truy cập bài hát của chúng ta...",
+            "Phá vỡ tường thành khoảng cách...",
+            "Đang tải kỉ niệm siu ngọt ngàoo...",
+            "10%...", "50%...", "100%...",
+            "Truy cập thành công❤️", 
+            "Welcome, My Love aka My Queen.",
+        ];
+
+        async function runHackerEffect() {
+            for (let line of lines) {
+                await typeLine(line);
+                await delay(300); // Nghỉ giữa các dòng
+            }
+            // Sau khi chạy xong
+            await delay(1000);
+            switchScreen();
+        }
+
+        // Hàm gõ từng chữ (Typer Effect)
+        function typeLine(text) {
+            return new Promise(resolve => {
+                const p = document.createElement('div');
+                p.className = 'line';
+                consoleOutput.appendChild(p);
+                
+                let i = 0;
+                const interval = setInterval(() => {
+                    p.textContent += text.charAt(i);
+                    window.scrollTo(0, document.body.scrollHeight);
+                    i++;
+                    if (i > text.length - 1) {
+                        clearInterval(interval);
+                        resolve();
+                    }
+                }, 30); // Tốc độ gõ (số càng nhỏ càng nhanh)
+            });
+        }
+
+        function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
+
+        // Chuyển màn hình
+        function switchScreen() {
+            terminal.style.display = 'none';
+            loveContent.style.display = 'block';
+            
+            // Hiện các thẻ card dần dần
+            const cards = document.querySelectorAll('.memory-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('show');
+                }, index * 800);
+            });
+        }
+
+        // Xử lý Modal Bí Mật
+        function showSecret() {
+            document.getElementById('angel-modal').style.display = 'flex';
+        }
+        function closeSecret() {
+            document.getElementById('angel-modal').style.display = 'none';
+            alert("Anh cũng yêu em nhớ em nhìu lắm! Hẹn gặp lại em ở trên Hà Nội thậc sớm nhó!");
+        }
+    </script>
+</body>
+</html>
